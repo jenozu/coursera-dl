@@ -1,12 +1,13 @@
 # App/runtime dependencies
 streamlit>=1.36,<2
 python-dotenv>=1.0,<2
-requests>=2.31,<3
+requests>=2.32,<3
 rookiepy>=0.5.6,<1
+dl-coursera==1.0.1
 
-# coursera-dl runtime dependencies, installed explicitly so its legacy
-# attrs==18.1.0 pin does not downgrade modern Streamlit dependencies.
-beautifulsoup4>=4.12,<5
+# Legacy coursera-dl is retained temporarily for enrolled-course listing only.
+# It is no longer used for course crawling/downloading.
+beautifulsoup4>=4.13,<5
 six>=1.16,<2
 urllib3>=1.26,<3
 pyasn1>=0.5,<1
