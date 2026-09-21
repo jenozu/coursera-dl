@@ -67,3 +67,25 @@ def test_download_course_supports_four_arg_crawl(monkeypatch, tmp_path):
     )
 
     assert seen["crawl"][1:] == ("python-crash-course", str(tmp_path), False)
+
+
+def test_download_course_creates_cache_directory(monkeypatch, tmp_path):
+    seen = {}
+
+    def fake_crawl(cookie_file, slug, outdir):
+        cache_dir = tmp_path / slug / ".cache"
+        seen["cache_exists"] = cache_dir.is_dir()
+        return {"slug": slug, "type": "Course"}
+
+    monkeypatch.setattr(download_engine, "crawl", fake_crawl)
+    monkeypatch.setattr(download_engine, "gather_dl_tasks", lambda outdir, course: [])
+    monkeypatch.setattr(download_engine, "download", lambda tasks, slug, outdir: None)
+
+    download_engine.download_course(
+        cookies=_cookies(),
+        course_slug="python-crash-course",
+        output_dir=str(tmp_path),
+        selected_types=["video"],
+    )
+
+    assert seen["cache_exists"] is True
