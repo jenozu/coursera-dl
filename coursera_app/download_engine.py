@@ -143,21 +143,14 @@ def download_course(
     try:
         os.makedirs(output_dir, exist_ok=True)
 
-        course = crawl(
-            cookies_file=cookie_file,
-            slug=course_slug,
-            outdir=output_dir,
-            is_spec=False,
-        )
+        # Use positional arguments for compatibility with the packaged
+        # dl_coursera 1.0.1 function signature.
+        course = crawl(cookie_file, course_slug, output_dir, False)
         tasks = gather_dl_tasks(output_dir, course)
         filtered_tasks = _filter_download_tasks(tasks, selected_types)
 
         if filtered_tasks:
-            download(
-                dl_tasks=filtered_tasks,
-                slug=course_slug,
-                outdir=output_dir,
-            )
+            download(filtered_tasks, course_slug, output_dir)
 
         return {
             "course_slug": course_slug,
