@@ -53,7 +53,7 @@ This file is the source of truth for the project. Complete work phase-by-phase, 
 - [ ] Sanitize filenames
 - [ ] Cache syllabus/course metadata where useful
 - [ ] Resume interrupted course downloads
-- [ ] Move away from direct `coursera-dl 0.11.5` dependency toward a maintained internal download engine
+- [x] Replace the legacy `coursera-dl 0.11.5` crawl/download path with `dl_coursera 1.0.1` adapter
 
 ## Phase 5 — Download Manager
 - [ ] Create persistent download jobs
@@ -97,7 +97,7 @@ This file is the source of truth for the project. Complete work phase-by-phase, 
 - [ ] Document upgrades and troubleshooting
 
 ## Reference Implementation Notes
-- `touhid314/Coursera-Downloader` is a useful reference for current Coursera browser-cookie authentication, resume behavior, subtitle language handling, and download workflow.
+- `touhid314/Coursera-Downloader` is a useful reference for browser-cookie authentication and UI behavior, but its download service has a current 2026 outage report.\n- `FLZ101/dl_coursera` is used as the maintained MIT-licensed crawl/download backend.
 - Do not copy its telemetry/remote notification behavior into this project.
 - Prefer our own clean service boundaries and tests instead of copying the reference repository wholesale.
 
