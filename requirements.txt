@@ -1,4 +1,14 @@
+# App/runtime dependencies
 streamlit>=1.36,<2
 python-dotenv>=1.0,<2
 requests>=2.31,<3
-coursera-dl==0.11.5
+
+# coursera-dl runtime dependencies, installed explicitly so its legacy
+# attrs==18.1.0 pin does not downgrade modern Streamlit dependencies.
+beautifulsoup4>=4.12,<5
+six>=1.16,<2
+urllib3>=1.26,<3
+pyasn1>=0.5,<1
+keyring>=24,<26
+configargparse>=1.7,<2
+attrs>=23,<26
