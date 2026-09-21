@@ -7,7 +7,9 @@ $python = if (Test-Path ".\.venv\Scripts\python.exe") {
 }
 
 & $python -m pip install --upgrade pip
-& $python -m pip install -r requirements.txt
+
+# Install app + development/test dependencies into the selected interpreter.
+& $python -m pip install -r requirements-dev.txt
 
 # coursera-dl 0.11.5 pins attrs==18.1.0. Installing it without dependencies
 # lets this project use compatible modern dependency versions instead.
@@ -15,4 +17,5 @@ $python = if (Test-Path ".\.venv\Scripts\python.exe") {
 
 Write-Host ""
 Write-Host "Setup complete."
-Write-Host "Run: $python -m streamlit run app.py"
+Write-Host "Test: $python -m pytest"
+Write-Host "Run:  $python -m streamlit run app.py"
