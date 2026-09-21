@@ -3,15 +3,15 @@
 This file is the source of truth for the project. Complete work phase-by-phase, update checkboxes after verification, and commit each meaningful checkpoint.
 
 ## Phase 1 — Foundation
-- [ ] Refactor the single-file prototype into a maintainable project structure
-- [ ] Add `requirements.txt`
-- [ ] Add `.env.example`
-- [ ] Add application configuration module
-- [ ] Add Coursera authentication/service wrapper
-- [ ] Remove the hard-coded local `venv/Lib/site-packages` path hack
-- [ ] Add a basic test suite
-- [ ] Add a project README with local setup/run instructions
-- [ ] Add downloads/runtime folders to `.gitignore`
+- [x] Refactor the single-file prototype into a maintainable project structure
+- [x] Add `requirements.txt`
+- [x] Add `.env.example`
+- [x] Add application configuration module
+- [x] Add Coursera authentication/service wrapper
+- [x] Remove the hard-coded local `venv/Lib/site-packages` path hack
+- [x] Add a basic test suite
+- [x] Add a project README with local setup/run instructions
+- [x] Add downloads/runtime folders to `.gitignore`
 - [ ] Verify the app still imports/starts with the new structure
 
 ## Phase 2 — Authentication
