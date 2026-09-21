@@ -1,14 +1,33 @@
-# Python virtual environment
+# Python virtual environments
 venv/
+.venv/
 
-# Environment variables
+# Environment variables / credentials
 .env
+.env.*
+!.env.example
 
 # Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Downloaded/runtime data
+downloads/
+*.part
+*.tmp
+logs/
+data/
+
+# Local auth/session data (Phase 2+)
+cookies.txt
+*.cookies.txt
+session.json
+*.session.json
 
 # VSCode settings
 .vscode/
@@ -18,4 +37,4 @@ __pycache__/
 Thumbs.db
 
 # Streamlit cache
-.streamlit/ 
+.streamlit/
