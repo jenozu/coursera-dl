@@ -144,6 +144,11 @@ def download_course(
     try:
         os.makedirs(output_dir, exist_ok=True)
 
+        # dl_coursera writes crawl metadata to <outdir>/<slug>/.cache/crawl.pkl
+        # but the packaged API does not always create that cache directory first.
+        cache_dir = os.path.join(output_dir, course_slug, ".cache")
+        os.makedirs(cache_dir, exist_ok=True)
+
         # dl_coursera 1.0.1 on PyPI exposes a 3-argument crawl() function,
         # while newer source revisions add a fourth specialization flag.
         # Detect the installed API instead of assuming one signature.
