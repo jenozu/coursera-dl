@@ -15,17 +15,17 @@ This file is the source of truth for the project. Complete work phase-by-phase, 
 - [ ] Verify the app still imports/starts with the new structure
 
 ## Phase 2 — Browser Authentication
-- [ ] Detect supported browser choices
-- [ ] Read Coursera CAUTH from Firefox with `rookiepy`
-- [ ] Read Coursera CAUTH from Edge with `rookiepy`
-- [ ] Read Coursera CAUTH from Brave with `rookiepy`
-- [ ] Add manual CAUTH entry as a fallback
-- [ ] Build authenticated Coursera session from CAUTH
-- [ ] Validate authentication before loading courses
-- [ ] Detect expired/invalid authentication
-- [ ] Provide clear browser re-login guidance
-- [ ] Avoid persisting raw browser cookies unnecessarily
-- [ ] Remove username/password storage from the normal app flow
+- [x] Detect supported browser choices
+- [x] Read Coursera CAUTH from Firefox with `rookiepy`
+- [x] Read Coursera CAUTH from Edge with `rookiepy`
+- [x] Read Coursera CAUTH from Brave with `rookiepy`
+- [x] Add manual CAUTH entry as a fallback
+- [x] Build authenticated Coursera session from CAUTH
+- [x] Validate authentication before loading courses
+- [x] Detect expired/invalid authentication
+- [x] Provide clear browser re-login guidance
+- [x] Avoid persisting raw browser cookies unnecessarily
+- [x] Remove username/password storage from the normal app flow
 
 ## Phase 3 — Course Library
 - [ ] Retrieve enrolled courses
