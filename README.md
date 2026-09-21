@@ -54,9 +54,18 @@ If PowerShell blocks activation, you can instead run Python directly from `.venv
 
 ### 3. Install dependencies
 
+The upstream `coursera-dl 0.11.5` package pins `attrs==18.1.0`, which conflicts with modern Streamlit packages. Install this project’s dependencies first, then install `coursera-dl` without its legacy dependency pins:
+
 ```powershell
 python -m pip install --upgrade pip
 pip install -r requirements.txt
+pip install --no-deps coursera-dl==0.11.5
+```
+
+Or run the included Windows setup helper:
+
+```powershell
+.\scripts\setup.ps1
 ```
 
 For development/testing:
@@ -112,6 +121,8 @@ coursera-dl/
 ├── requirements.txt
 ├── requirements-dev.txt
 ├── .env.example
+├── scripts/
+│   └── setup.ps1
 ├── coursera_app/
 │   ├── __init__.py
 │   ├── auth.py
