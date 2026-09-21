@@ -13,7 +13,7 @@ See [MASTER_PLAN.md](MASTER_PLAN.md) for the source-of-truth roadmap.
 ## Current Features
 
 - Local Streamlit UI
-- Legacy username/password authentication through `coursera-dl`
+- Browser-based Coursera authentication using the existing CAUTH session cookie
 - Course dropdown
 - Content-type selection
 - Video, subtitle, PDF, assignment, and supplementary-file filtering
@@ -22,7 +22,7 @@ See [MASTER_PLAN.md](MASTER_PLAN.md) for the source-of-truth roadmap.
 - Retry/cancel controls
 - Local credential update/logout
 
-Phase 2 will replace the legacy password flow with browser-cookie authentication.
+Phase 2 browser-cookie authentication is now implemented and awaiting live Windows verification.
 
 ## Requirements
 
@@ -74,24 +74,21 @@ For development/testing:
 pip install -r requirements-dev.txt
 ```
 
-### 4. Configure credentials
+### 4. Optional local settings
 
-Copy the example file:
+You do not need to store your Coursera email or password. Log in to `coursera.org` in Firefox, Edge, or Brave.
+
+Optionally copy the settings example:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Then edit `.env` locally:
+The only current setting is the download directory:
 
 ```env
-COURSERA_USERNAME=your-email@example.com
-COURSERA_PASSWORD=your-password
+COURSERA_DOWNLOAD_DIR=downloads
 ```
-
-Do **not** commit `.env`.
-
-You can also enter/update these credentials from the app sidebar.
 
 ### 5. Run the app
 
@@ -131,15 +128,27 @@ coursera-dl/
     └── test_config.py
 ```
 
+## Authentication
+
+1. Sign in to `coursera.org` in Firefox, Edge, or Brave.
+2. Start the app.
+3. Select that browser in the sidebar.
+4. Click **Connect from Browser**.
+5. The app reads only the Coursera `CAUTH` cookie and keeps it in memory for the current Streamlit session.
+
+If automatic reading fails, the sidebar provides a manual CAUTH fallback.
+
 ## Security
 
 Never commit:
 
-- Coursera passwords
 - `.env`
 - cookies or session files
+- CAUTH values
 - downloaded course content
 - authentication tokens
+
+The normal app flow does not store your Coursera password.
 
 ## Download Location
 
