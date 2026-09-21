@@ -2,6 +2,7 @@
 streamlit>=1.36,<2
 python-dotenv>=1.0,<2
 requests>=2.31,<3
+rookiepy>=0.5.6,<1
 
 # coursera-dl runtime dependencies, installed explicitly so its legacy
 # attrs==18.1.0 pin does not downgrade modern Streamlit dependencies.
