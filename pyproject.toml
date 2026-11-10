@@ -1,0 +1,29 @@
+[project]
+name = "coursera-downloader"
+version = "0.1.0"
+description = "Local-first manager for Coursera course material your account can access"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# Legacy Streamlit-era files are linted only after milestone M7 removes or replaces them.
+extend-exclude = [
+    "data",
+    "app.py",
+    "coursera_app/auth.py",
+    "coursera_app/browser_auth.py",
+    "coursera_app/config.py",
+    "coursera_app/download_engine.py",
+    "tests/test_browser_auth.py",
+    "tests/test_config.py",
+    "tests/test_download_engine.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+ignore = ["S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "B"]

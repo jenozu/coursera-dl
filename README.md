@@ -4,6 +4,8 @@ A local Streamlit interface for downloading course content that your Coursera ac
 
 > This project is an independent personal tool and is not affiliated with Coursera. Use it only for content you are authorized to access and in accordance with Coursera's terms and applicable law.
 
+> **Rebuild in progress (branch `rebuild/fastapi`).** The Streamlit app below still works but has known issues, documented in `docs/audit/`. The new FastAPI + HTML/JS app is being built milestone by milestone; see `CLAUDE.md` for the build order. The feature list below is corrected in milestone M0.
+
 ## Project Status
 
 The project is currently in **Phase 1 — Foundation**.

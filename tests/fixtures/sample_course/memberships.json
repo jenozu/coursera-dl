@@ -1,0 +1,8 @@
+{
+  "linked": {
+    "courses.v1": [
+      {"slug": "sample-course-one", "name": "Sample Course One"},
+      {"slug": "sample-course-two", "name": "Sample Course Two"}
+    ]
+  }
+}
