@@ -32,7 +32,7 @@ Read first: `docs/audit/AUDIT_REPORT.md` (finding IDs like C-1, H-2), `docs/audi
 Stub modules raise `NotImplementedError` and name their roadmap task in the docstring. Skipped tests are named after acceptance criteria.
 
 ## Milestones
-- [ ] **M0 Repo prep** — roadmap 1.5, 1.4, 7.1: README fixed, CI green, fake server working
+- [x] **M0 Repo prep** — roadmap 1.5, 1.4, 7.1: README fixed, CI green, fake server working
 - [ ] **M1 Critical fixes on current app** — 1.1, 1.2, 1.3, 1.6 + regression tests (fixes C-1, H-1, H-2, M-6)
 - [ ] **M2 Backend core** — 2.1, 2.2, 2.3, 2.4, 3.3, 4.2 (legacy `coursera-dl` removed)
 - [ ] **M3 Download engine** — 4.1, 4.3, 2.5, 4.4, 4.5 (fetch loop, jobs, SQLite, cancel)

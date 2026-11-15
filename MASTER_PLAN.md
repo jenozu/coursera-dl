@@ -12,7 +12,7 @@ This file is the source of truth for the project. Complete work phase-by-phase, 
 - [x] Add a basic test suite
 - [x] Add a project README with local setup/run instructions
 - [x] Add downloads/runtime folders to `.gitignore`
-- [ ] Verify the app still imports/starts with the new structure
+- [x] Verify the app still imports/starts with the new structure (Python 3.11 + `setup.ps1`)
 
 ## Phase 2 — Browser Authentication
 - [x] Detect supported browser choices
