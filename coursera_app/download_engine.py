@@ -8,7 +8,12 @@ import tempfile
 from pathlib import Path
 from typing import Iterable, Sequence
 
-from dl_coursera_run import crawl, download, gather_dl_tasks
+import threading
+
+from dl_coursera_run import crawl, gather_dl_tasks
+
+from coursera_app.downloader import ItemResult, download_one
+from coursera_app.security import safe_course_dir
 
 
 class DownloadEngineError(RuntimeError):
@@ -139,6 +144,8 @@ def download_course(
 ) -> dict:
     """Crawl and download one enrolled Coursera course."""
 
+    # Validate the slug and containment before anything touches the disk (audit M-6).
+    course_dir = safe_course_dir(output_dir, course_slug)
     cookie_file = _write_cookie_file(cookies)
 
     try:
@@ -146,7 +153,7 @@ def download_course(
 
         # dl_coursera writes crawl metadata to <outdir>/<slug>/.cache/crawl.pkl
         # but the packaged API does not always create that cache directory first.
-        cache_dir = os.path.join(output_dir, course_slug, ".cache")
+        cache_dir = os.path.join(course_dir, ".cache")
         os.makedirs(cache_dir, exist_ok=True)
 
         # dl_coursera 1.0.1 on PyPI exposes a 3-argument crawl() function,
@@ -166,13 +173,37 @@ def download_course(
         tasks = gather_dl_tasks(output_dir, course)
         filtered_tasks = _filter_download_tasks(tasks, selected_types)
 
-        if filtered_tasks:
-            download(filtered_tasks, course_slug, output_dir)
+        # Own the download step: never call dl_coursera_run.download(), which replaces
+        # our task list with its stale download.dl_tasks_failed.json (audit C-1).
+        root = os.path.realpath(output_dir)
+        cancel = threading.Event()
+        results = []
+        for task in filtered_tasks:
+            target = os.path.realpath(task["filename"])
+            try:
+                inside = os.path.commonpath([root, target]) == root
+            except ValueError:  # different drives on Windows
+                inside = False
+            if not inside:
+                results.append(ItemResult(task["filename"], "failed", "path_outside_output"))
+                continue
+            results.append(download_one(task["url"], target, cancel=cancel))
+
+        def count(status):
+            return sum(r.status == status for r in results)
 
         return {
             "course_slug": course_slug,
             "total_tasks": len(tasks),
-            "download_tasks": len(filtered_tasks),
+            "selected_tasks": len(filtered_tasks),
+            "succeeded": count("done"),
+            "skipped": count("skipped"),
+            "failed": count("failed"),
+            "failures": [
+                {"file": os.path.basename(r.path), "reason": r.error_code}
+                for r in results
+                if r.status == "failed"
+            ],
             "output_dir": os.path.abspath(output_dir),
         }
     except Exception as exc:

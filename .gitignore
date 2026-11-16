@@ -13,6 +13,7 @@ __pycache__/
 *.pyo
 *.pyd
 .pytest_cache/
+.pytest_tmp/
 .coverage
 htmlcov/
 
@@ -36,5 +37,12 @@ session.json
 .DS_Store
 Thumbs.db
 
-# Streamlit cache
-.streamlit/
+# Streamlit cache (config.toml is committed)
+.streamlit/*
+!.streamlit/config.toml
+
+# master-harness
+.claude/settings.local.json
+.claude/deploy-target
+.harness-backup/
+.harness-tmp/

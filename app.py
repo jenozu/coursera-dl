@@ -1,21 +1,28 @@
 import streamlit as st
 
-from coursera_app.auth import (
-    CourseraAuthenticationError,
-    connect_with_cauth,
-    list_courses,
-)
-from coursera_app.browser_auth import (
-    BrowserCookieError,
-    SUPPORTED_BROWSERS,
-    read_coursera_cookies_from_browser,
-)
-from coursera_app.config import load_config
-from coursera_app.download_engine import (
-    DownloadEngineError,
-    cookies_from_cauth,
-    download_course,
-)
+try:
+    from coursera_app.auth import (
+        CourseraAuthenticationError,
+        connect_with_cauth,
+        list_courses,
+    )
+    from coursera_app.browser_auth import (
+        BrowserCookieError,
+        SUPPORTED_BROWSERS,
+        read_coursera_cookies_from_browser,
+    )
+    from coursera_app.config import load_config
+    from coursera_app.download_engine import (
+        DownloadEngineError,
+        cookies_from_cauth,
+        download_course,
+    )
+except ImportError as exc:  # startup self-check (roadmap 1.4)
+    st.error(
+        f"Missing dependency: {exc}. Use Python 3.11 and run "
+        "`.\\scripts\\setup.ps1`, which installs the legacy `coursera-dl` package."
+    )
+    st.stop()
 
 
 config = load_config()
@@ -185,13 +192,20 @@ if st.button("Download", disabled=not selected_types):
 
         status.write(
             f"Found {result['total_tasks']} downloadable resources; "
-            f"processed {result['download_tasks']} matching your selections."
+            f"{result['selected_tasks']} matched your selections."
         )
-        status.update(label="Download finished", state="complete", expanded=True)
-
-        st.success(
-            f"Finished. Files are under: {result['output_dir']}"
+        summary = (
+            f"Downloaded {result['succeeded']}, skipped {result['skipped']}, "
+            f"failed {result['failed']}. Files are under: {result['output_dir']}"
         )
+        if result["failed"]:
+            status.update(label="Download finished with errors", state="error", expanded=True)
+            st.warning(summary)
+            for f in result["failures"]:
+                st.write(f"- {f['file']}: {f['reason']}")
+        else:
+            status.update(label="Download finished", state="complete", expanded=True)
+            st.success(summary)
     except DownloadEngineError as exc:
         status.update(label="Download failed", state="error", expanded=True)
         st.error(

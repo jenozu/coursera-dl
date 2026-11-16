@@ -1,0 +1,7 @@
+[server]
+# Listen on this machine only (audit H-2). Never 0.0.0.0.
+address = "127.0.0.1"
+
+[browser]
+# No usage statistics sent to Streamlit (local-only rule).
+gatherUsageStats = false

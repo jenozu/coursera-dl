@@ -1,0 +1,855 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "title": "Adopt master-harness and finish M0 repo prep",
+        "description": "Harness installed; README/MASTER_PLAN corrected, CI green, fake server and fixtures in place (roadmap 1.5, 1.4, 7.1).",
+        "status": "done",
+        "priority": "high",
+        "dependencies": [],
+        "details": "",
+        "testStrategy": "python -m pytest -q tests/unit/test_fake_server.py",
+        "complexity": 2,
+        "phase": 0,
+        "id": 1,
+        "subtasks": []
+      },
+      {
+        "title": "Own the download step in downloader.py (roadmap 1.1, C-1, H-1)",
+        "description": "Stop calling dl_coursera_run.download(); our downloader returns per-item results done/skipped/failed and ignores the engine failed-list file.",
+        "status": "done",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: coursera_app/downloader.py, download_engine.py (legacy app must keep working), tests/unit/test_downloader.py, tests/test_download_engine.py. Do not read or write download.dl_tasks_failed.json.\n\n[2026-11-16T11:03:21-05:00] built: downloader.download_one (no Range resume), download_engine owns loop, app.py summary; tests pass\n\n[2026-11-16T11:04:54-05:00] opus fixes: restored 4 skipped placeholder tests (roadmap 4.1/4.3) in tests/unit/test_downloader.py; downloader skips length check when Content-Encoding set (iter_content decodes gzip); download_engine catches ValueError from os.path.commonpath (different drives) and records path_outside_output. pytest task files 9 passed 4 skipped; full suite 21 passed 43 skipped; ruff clean.\n\n[2026-11-16T11:06:41-05:00] done by opus, escalated from sonnet; verified",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_downloader.py tests/test_download_engine.py",
+        "complexity": 6,
+        "review": true,
+        "phase": 1,
+        "id": 2,
+        "subtasks": []
+      },
+      {
+        "title": "Report download outcomes in the Streamlit UI (roadmap 1.2)",
+        "description": "Replace 'Finished' with 'Downloaded X, skipped Y, failed Z' and list failed files with reasons; rename download_tasks to selected_tasks.",
+        "status": "done",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: app.py, download_engine.py.\n\n[2026-11-16T15:18:05-05:00] plan (haiku): coursera_app/download_engine.py, tests/test_download_engine.py - task 2 already built the app.py X/Y/Z summary and failure list; remaining: drop duplicate download_tasks key, assert failure file/reason and selected_tasks in test.\nbuilt: removed \"download_tasks\" from download_course() result (app.py reads selected_tasks only); extended test_http_500_reported_failed_in_summary with file name, selected_tasks, and no download_tasks key.\ntests: task files 9 passed 4 skipped with --basetemp outside pytest-of-andel; default tmp_path gives 9 PermissionError (pre-existing, WinError 5 on pytest-of-andel). ruff I001 in app.py is pre-existing on baseline.\n\n[2026-11-16T15:18:05-05:00] app.py UI gaps: none left; zero-failure path shows st.success, failure path st.warning naming files (verified by reading, no AppTest run)\n\n[2026-11-16T15:19:12-05:00] done by haiku; verified\n\n[2026-11-16T15:19:16-05:00] note: UI outcome lines verified by reading app.py only, no AppTest; add to manual-checks if wanted",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests",
+        "complexity": 3,
+        "phase": 1,
+        "id": 3,
+        "subtasks": []
+      },
+      {
+        "title": "Bind Streamlit to localhost, disable usage stats (roadmap 1.3, H-2)",
+        "description": "Commit .streamlit/config.toml (address 127.0.0.1, gatherUsageStats=false), make scripts/run.ps1 use it, document it.",
+        "status": "done",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Remove .streamlit/ from .gitignore for config.toml only.\n\n[2026-11-16T12:43:09-05:00] plan (haiku): .streamlit/config.toml (new), .gitignore (.streamlit/* + !config.toml), tests/test_streamlit_config.py (new), README run note - config-file approach, no app code change.\noutcome: config.toml committed-ready; streamlit run app.py from repo root logs only \"URL: http://127.0.0.1:8501\" (no Network URL); curl to LAN IP 10.0.0.115:8501 refused (exit 7). pytest: 14 passed, 9 errors pre-existing (Windows pytest tmp_path PermissionError, same on baseline).\ndiscrepancy: scripts/run.ps1 runs run.py, a stub that exits 1 and does not start Streamlit. Left run.ps1 unchanged (it is the M5 launcher). Config is picked up automatically from repo root, so run.ps1 needs no change until it starts Streamlit.\n\n[2026-11-16T12:43:09-05:00] testStrategy: streamlit run from repo root = no Network URL (verified); pytest -q tests = 14 passed, 9 pre-existing tmp_path errors\n\n[2026-11-16T15:16:45-05:00] done by sonnet, escalated from haiku; verified",
+        "testStrategy": "Start app as scripts/run.ps1 does and confirm the log shows no Network URL; .venv/Scripts/python.exe -m pytest -q tests",
+        "complexity": 2,
+        "phase": 1,
+        "id": 4,
+        "subtasks": []
+      },
+      {
+        "title": "Validate course slugs and constrain output paths (roadmap 1.6, M-6)",
+        "description": "validate_slug() (^[a-z0-9][a-z0-9-]{0,127}$) plus resolved-path containment, called from download_course().",
+        "status": "done",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: download_engine.py, coursera_app/security.py, tests/unit/test_security.py.\n\n[2026-11-16T15:20:20-05:00] plan (haiku): coursera_app/security.py (validate_slug, safe_course_dir), coursera_app/download_engine.py (call safe_course_dir before cookie write), tests/unit/test_security.py (un-skip 1.6 tests, keep 4.2/5.1 skipped) - regex fullmatch, realpath containment, InvalidSlug from errors.py\n\n[2026-11-16T15:20:24-05:00] done (haiku): validate_slug uses re.fullmatch on [a-z0-9][a-z0-9-]{0,127} and raises InvalidSlug; safe_course_dir validates then checks realpath containment with commonpath. download_course() calls safe_course_dir before writing the cookie file (so errors are not wrapped in DownloadEngineError) and uses its result for .cache. Un-skipped traversal, accept, containment tests; 4.2 and 5.1 tests stay skipped. Tests: tests/unit/test_security.py 15 passed 2 skipped; tests/test_download_engine.py 5 passed. Ruff: only pre-existing I001/UP035 in download_engine.py import block (not touched).\n\n[2026-11-16T15:20:25-05:00] note: an earlier malformed log heredoc may have written an empty note on task 5; ignore it.\n\n[2026-11-16T15:21:34-05:00] done by haiku; verified",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_security.py",
+        "complexity": 3,
+        "review": true,
+        "phase": 1,
+        "id": 5,
+        "subtasks": []
+      },
+      {
+        "title": "Phase 1 gate: ruff and pytest pass",
+        "description": "Free script gate before the phase PR.",
+        "status": "done",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "details": "[2026-11-16T15:21:42-05:00] script check FAILED: `.venv/Scripts/python.exe -m pytest -q` exit 1 (expected 0); details in .claude/tmp/checks/6.log\n\n[2026-11-16T15:22:24-05:00] script check passed: 2 command(s), 9.4s, no model used",
+        "testStrategy": "python .taskmaster/run_checks.py run --only <id>",
+        "complexity": 3,
+        "runner": "script",
+        "check": [
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "ruff",
+            "check",
+            "."
+          ],
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "pytest",
+            "-q"
+          ]
+        ],
+        "phase": 1,
+        "id": 6,
+        "subtasks": []
+      },
+      {
+        "title": "Engine adapter, services layer and typed errors (roadmap 2.1)",
+        "description": "Move crawl/gather into engine.py, services/ with no Streamlit/FastAPI imports, errors.py hierarchy (AuthExpired, CourseNotFound, NetworkError, DiskError, RateLimited).",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: coursera_app/engine.py, errors.py, services/*.py. Reuse working crawl/cookie helpers from download_engine.py and browser_auth.py.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_engine_new.py tests/unit/test_errors.py",
+        "complexity": 6,
+        "phase": 2,
+        "id": 7,
+        "subtasks": []
+      },
+      {
+        "title": "Remove legacy coursera-dl; list courses via memberships endpoint (roadmap 2.2, M-1)",
+        "description": "One requests call with timeouts, status handling and JSON-shape checks; delete coursera-dl from setup, README and requirements.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: services/course_service.py, auth_service.py, requirements.txt, scripts/setup.ps1. Dependency change is a removal; say why in the commit.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_auth_service.py",
+        "complexity": 5,
+        "review": true,
+        "phase": 2,
+        "id": 8,
+        "subtasks": []
+      },
+      {
+        "title": "Logging with secret redaction (roadmap 2.3)",
+        "description": "Rotating file log in data/logs/ with a filter masking CAUTH, cookie values and signed-URL query strings.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. File: coursera_app/logging_setup.py.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_logging_redaction.py",
+        "complexity": 4,
+        "review": true,
+        "phase": 2,
+        "id": 9,
+        "subtasks": []
+      },
+      {
+        "title": "Settings module (roadmap 2.4)",
+        "description": "JSON settings data/settings.json (download dir, default types), COURSERA_DOWNLOAD_DIR override, validate directory is writable.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. File: coursera_app/settings.py.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_settings.py",
+        "complexity": 3,
+        "phase": 2,
+        "id": 10,
+        "subtasks": []
+      },
+      {
+        "title": "Minimize and protect cookies (roadmap 3.3)",
+        "description": "Cookies in memory only, CAUTH-only first; temp cookie file under data/tmp with 0600, removed after success, error and cancel, swept at startup.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: engine.py, services/auth_service.py.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_auth_service.py tests/unit/test_security.py",
+        "complexity": 5,
+        "review": true,
+        "phase": 2,
+        "id": 11,
+        "subtasks": []
+      },
+      {
+        "title": "Safe Windows-safe file naming (roadmap 4.2)",
+        "description": "Sanitize every path segment (reserved names, trailing dots, control chars), cap lengths, contain under root, de-duplicate.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. File: coursera_app/security.py or downloader.py. Uses the slug validator from phase 1.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit",
+        "complexity": 4,
+        "review": true,
+        "phase": 2,
+        "id": 12,
+        "subtasks": []
+      },
+      {
+        "title": "Phase 2 gate: ruff and pytest pass",
+        "description": "Free script gate before the phase PR.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "details": "",
+        "testStrategy": "python .taskmaster/run_checks.py run --only <id>",
+        "complexity": 3,
+        "runner": "script",
+        "check": [
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "ruff",
+            "check",
+            "."
+          ],
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "pytest",
+            "-q"
+          ]
+        ],
+        "phase": 2,
+        "id": 13,
+        "subtasks": []
+      },
+      {
+        "title": "Robust fetch loop (roadmap 4.1)",
+        "description": "Timeouts, .part streaming with atomic rename, skip complete files, Range resume, size check, backoff with jitter, Retry-After on 429, no retry on 401/403/404.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          13
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: coursera_app/downloader.py, tests/unit/test_downloader.py, tests/fake_coursera.py.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_downloader.py",
+        "complexity": 7,
+        "review": true,
+        "phase": 3,
+        "id": 14,
+        "subtasks": [
+          {
+            "title": "Streaming to .part, atomic rename, skip complete files",
+            "description": "Skip/atomic tests in tests/unit/test_downloader.py pass.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_downloader.py",
+            "complexity": 4,
+            "id": 1
+          },
+          {
+            "title": "Range resume and Content-Length size check",
+            "description": "Disconnect mid-body then resume completes byte-identically against the fake server.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_downloader.py",
+            "complexity": 5,
+            "id": 2
+          },
+          {
+            "title": "Backoff with jitter, Retry-After on 429, no retry on 401/403/404, timeouts",
+            "description": "429 with Retry-After waits and succeeds; slow server times out and retries.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_downloader.py",
+            "complexity": 5,
+            "id": 3
+          }
+        ]
+      },
+      {
+        "title": "Job manager and SQLite schema (roadmap 2.5)",
+        "description": "jobs.py worker thread with cancel Event and status transitions; db.py jobs/items/events; running jobs become interrupted at startup; one job per course.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          14
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: coursera_app/jobs.py, db.py, schema.sql.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_jobs_db.py",
+        "complexity": 6,
+        "review": true,
+        "phase": 3,
+        "id": 15,
+        "subtasks": []
+      },
+      {
+        "title": "Cancel and cleanup (roadmap 4.3)",
+        "description": "Cancel exits between chunks, leaves .part for resume, marks items cancelled, no threads left.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. ",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_jobs_db.py tests/unit/test_downloader.py",
+        "complexity": 4,
+        "phase": 3,
+        "id": 16,
+        "subtasks": []
+      },
+      {
+        "title": "Cache refresh with JSON structure (roadmap 4.4)",
+        "description": "Refresh discards cached structure; store JSON not pickle; re-gather stale tasks.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          13
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. File: engine.py. No pickle.load in our code.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_engine_new.py",
+        "complexity": 4,
+        "phase": 3,
+        "id": 17,
+        "subtasks": []
+      },
+      {
+        "title": "Tighten content-type classification (roadmap 4.5)",
+        "description": "Explicit documented extension table: video, subtitle, pdf, reading/html, other.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          13
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. File: engine.py.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_engine_new.py",
+        "complexity": 3,
+        "phase": 3,
+        "id": 18,
+        "subtasks": []
+      },
+      {
+        "title": "End-to-end test against the fake server",
+        "description": "crawl, gather, download, verify files in under 30 s.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          15,
+          16,
+          17,
+          18
+        ],
+        "details": "Un-skip tests/integration/test_end_to_end.py (roadmap 7.1/7.2).",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/integration",
+        "complexity": 4,
+        "phase": 3,
+        "id": 19,
+        "subtasks": []
+      },
+      {
+        "title": "Phase 3 gate: ruff and pytest pass",
+        "description": "Free script gate before the phase PR.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "details": "",
+        "testStrategy": "python .taskmaster/run_checks.py run --only <id>",
+        "complexity": 3,
+        "runner": "script",
+        "check": [
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "ruff",
+            "check",
+            "."
+          ],
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "pytest",
+            "-q"
+          ]
+        ],
+        "phase": 3,
+        "id": 20,
+        "subtasks": []
+      },
+      {
+        "title": "Typed session check (roadmap 3.1, M-2)",
+        "description": "check_session() returns valid | expired | network_error; run on connect, before each job, on demand, also for cached courses.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          20
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. File: services/auth_service.py.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_auth_service.py",
+        "complexity": 4,
+        "review": true,
+        "phase": 4,
+        "id": 21,
+        "subtasks": []
+      },
+      {
+        "title": "Drop dependence on the engine canary course (roadmap 3.2)",
+        "description": "Map engine CookiesExpiredException to AuthExpired with the app's own guidance (no cookies.txt mention).",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          21
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. ",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_auth_service.py tests/unit/test_engine_new.py",
+        "complexity": 3,
+        "phase": 4,
+        "id": 22,
+        "subtasks": []
+      },
+      {
+        "title": "Backend session lifecycle states (roadmap 3.5)",
+        "description": "Expiry mid-queue marks remaining jobs paused:auth and they run after reconnect. UI part is in phase 6.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          21
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: jobs.py, services/download_service.py.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_jobs_db.py tests/unit/test_auth_service.py",
+        "complexity": 5,
+        "review": true,
+        "phase": 4,
+        "id": 23,
+        "subtasks": []
+      },
+      {
+        "title": "Phase 4 gate: ruff and pytest pass",
+        "description": "Free script gate before the phase PR.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          21,
+          22,
+          23
+        ],
+        "details": "",
+        "testStrategy": "python .taskmaster/run_checks.py run --only <id>",
+        "complexity": 3,
+        "runner": "script",
+        "check": [
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "ruff",
+            "check",
+            "."
+          ],
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "pytest",
+            "-q"
+          ]
+        ],
+        "phase": 4,
+        "id": 24,
+        "subtasks": []
+      },
+      {
+        "title": "FastAPI shell and security middleware (roadmap 5.1)",
+        "description": "create_app(); Host allowlist, per-launch token, Origin check, no CORS, CSP and nosniff; run.py binds 127.0.0.1 and opens the browser with the token.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [
+          24
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: coursera_app/main.py, security.py, run.py. Dependencies fastapi and uvicorn are required by the PRD.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/api/test_api_security.py",
+        "complexity": 6,
+        "review": true,
+        "phase": 5,
+        "id": 25,
+        "subtasks": []
+      },
+      {
+        "title": "Auth and course routes (roadmap 5.2)",
+        "description": "GET /api/auth/status, POST /api/auth/connect, /disconnect, GET /api/courses with typed error bodies; no cookie values in responses.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          25
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Directory: coursera_app/api/.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/api",
+        "complexity": 4,
+        "review": true,
+        "phase": 5,
+        "id": 26,
+        "subtasks": []
+      },
+      {
+        "title": "Download and settings routes plus SSE (roadmap 5.3)",
+        "description": "POST/GET /api/downloads, cancel, retry, GET/PUT /api/settings, GET /api/events snapshot then deltas; invalid slug returns invalid_slug.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          25
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. ",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/api",
+        "complexity": 6,
+        "phase": 5,
+        "id": 27,
+        "subtasks": []
+      },
+      {
+        "title": "Phase 5 gate: ruff and pytest pass",
+        "description": "Free script gate before the phase PR.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          25,
+          26,
+          27
+        ],
+        "details": "",
+        "testStrategy": "python .taskmaster/run_checks.py run --only <id>",
+        "complexity": 3,
+        "runner": "script",
+        "check": [
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "ruff",
+            "check",
+            "."
+          ],
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "pytest",
+            "-q"
+          ]
+        ],
+        "phase": 5,
+        "id": 28,
+        "subtasks": []
+      },
+      {
+        "title": "Static single-page UI (roadmap 5.4)",
+        "description": "Header auth status, Add Course, Downloads (active/queued/history), Log panel, Settings; plain HTML/CSS/JS, no CDN, 360 px to desktop, keyboard accessible, SSE progress.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          28
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: coursera_app/web/*.",
+        "testStrategy": "See subtasks; manual checklist in .taskmaster/docs/manual-checks.md",
+        "complexity": 7,
+        "phase": 6,
+        "id": 29,
+        "subtasks": [
+          {
+            "title": "Page shell, auth status header, add-course panel and course list",
+            "description": "Loads with no external requests; connect and list work against the fake server.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": "Manual check against the fake server (run app via devserver).",
+            "complexity": 4,
+            "id": 1
+          },
+          {
+            "title": "Downloads list with SSE progress, cancel and retry, history and log panel",
+            "description": "Progress updates live; cancel and retry work.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": "Manual check against the fake server (run app via devserver).",
+            "complexity": 5,
+            "id": 2
+          },
+          {
+            "title": "Settings panel, responsive layout (360 px), keyboard and accessibility pass",
+            "description": "Usable at 360 px and 1280 px; tab order and labels correct.",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": "Manual check against the fake server (run app via devserver).",
+            "complexity": 4,
+            "id": 3
+          }
+        ]
+      },
+      {
+        "title": "Phase 6 gate: ruff and pytest pass",
+        "description": "Free script gate before the phase PR.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          29
+        ],
+        "details": "",
+        "testStrategy": "python .taskmaster/run_checks.py run --only <id>",
+        "complexity": 3,
+        "runner": "script",
+        "check": [
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "ruff",
+            "check",
+            "."
+          ],
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "pytest",
+            "-q"
+          ]
+        ],
+        "phase": 6,
+        "id": 30,
+        "subtasks": []
+      },
+      {
+        "title": "Remove Streamlit and legacy files (roadmap 5.5)",
+        "description": "Delete app.py, auth.py, download_engine.py, streamlit from requirements, Streamlit lines from README and .gitignore.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          30
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Grep for streamlit and coursera imports afterwards.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests; grep -ri streamlit requirements.txt coursera_app run.py returns nothing",
+        "complexity": 3,
+        "review": true,
+        "phase": 7,
+        "id": 31,
+        "subtasks": []
+      },
+      {
+        "title": "CI matrix and 80% coverage (roadmap 7.3, 7.2)",
+        "description": "CI green on Windows and Linux, Python 3.11 and 3.12 with ruff, pytest, pip-audit; coverage of coursera_app excluding web at least 80%.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          31
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. .github/workflows/ci.yml. Each audit finding (C-1, H-1, M-6, M-2) has a regression test.",
+        "testStrategy": ".venv/Scripts/python.exe -m pytest -q --cov=coursera_app",
+        "complexity": 3,
+        "phase": 7,
+        "id": 32,
+        "subtasks": []
+      },
+      {
+        "title": "Engine contract test (roadmap 8.4)",
+        "description": "Test that imports dl_coursera_run and asserts the functions and signatures the adapter uses; run by scripts/check_engine.py and CI.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          32
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. ",
+        "testStrategy": ".venv/Scripts/python.exe scripts/check_engine.py",
+        "complexity": 3,
+        "phase": 7,
+        "id": 33,
+        "subtasks": []
+      },
+      {
+        "title": "Final README and docs/ARCHITECTURE.md (roadmap 7.4)",
+        "description": "README: install, run, authenticate, troubleshoot, security notes; ARCHITECTURE.md condensed from the recommendation; tick MASTER_PLAN.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          31
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. ",
+        "testStrategy": "Run every command in the README against the fake setup.",
+        "complexity": 3,
+        "phase": 7,
+        "id": 34,
+        "subtasks": []
+      },
+      {
+        "title": "Phase 7 gate: ruff and pytest pass",
+        "description": "Free script gate before the phase PR.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          31,
+          32,
+          33,
+          34
+        ],
+        "details": "",
+        "testStrategy": "python .taskmaster/run_checks.py run --only <id>",
+        "complexity": 3,
+        "runner": "script",
+        "check": [
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "ruff",
+            "check",
+            "."
+          ],
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "pytest",
+            "-q"
+          ]
+        ],
+        "phase": 7,
+        "id": 35,
+        "subtasks": []
+      },
+      {
+        "title": "Live per-browser verification on Windows (roadmap 3.4)",
+        "description": "Firefox, Edge, Brave, logged in/out, browser open/closed, admin or not; manual CAUTH fallback; record table in README.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          35
+        ],
+        "details": "Human with a real Coursera account. Never share cookies. Steps in docs/LIVE_CHECKLIST.md.",
+        "testStrategy": "Browser x condition table committed.",
+        "complexity": 3,
+        "human": true,
+        "phase": 8,
+        "id": 36,
+        "subtasks": []
+      },
+      {
+        "title": "Live end-to-end checklist on one enrolled course (roadmap 8.1)",
+        "description": "Complete docs/LIVE_CHECKLIST.md: connect, list, download, repeat download, cancel, resume; sign off.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          36
+        ],
+        "details": "Human only. Use a course the account is enrolled in.",
+        "testStrategy": "Signed-off checklist in docs/.",
+        "complexity": 3,
+        "human": true,
+        "phase": 8,
+        "id": 37,
+        "subtasks": []
+      },
+      {
+        "title": "Launcher (roadmap 8.2)",
+        "description": "scripts/run.ps1 and run.bat create the venv on first run, start the server, open the browser.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          37
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. ",
+        "testStrategy": "Fresh clone: double-click run.bat launches the app.",
+        "complexity": 3,
+        "phase": 8,
+        "id": 38,
+        "subtasks": []
+      },
+      {
+        "title": "Versioning and release (roadmap 8.3)",
+        "description": "__version__, CHANGELOG, tagged release with zip, upgrade notes including pinning dl-coursera.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [
+          37
+        ],
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. ",
+        "testStrategy": "Tag builds an artifact; upgrade notes read cleanly.",
+        "complexity": 3,
+        "phase": 8,
+        "id": 39,
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "project": "Coursera Downloader",
+      "description": "Coursera Downloader master plan. Source of truth; TASKS.md is generated from this.",
+      "phases": [
+        {
+          "id": 0,
+          "name": "Prep"
+        },
+        {
+          "id": 1,
+          "name": "Critical fixes"
+        },
+        {
+          "id": 2,
+          "name": "Backend core"
+        },
+        {
+          "id": 3,
+          "name": "Download engine"
+        },
+        {
+          "id": 4,
+          "name": "Auth hardening"
+        },
+        {
+          "id": 5,
+          "name": "API"
+        },
+        {
+          "id": 6,
+          "name": "Web UI"
+        },
+        {
+          "id": 7,
+          "name": "Cutover and docs"
+        },
+        {
+          "id": 8,
+          "name": "Live verification and release"
+        }
+      ],
+      "created": "2026-11-16",
+      "updated": "2026-11-16T15:22:24-05:00",
+      "goal": "Reliable local download manager (FastAPI + plain HTML/JS, Windows, 127.0.0.1 only) for Coursera material the user's own account is enrolled in.",
+      "non_goals": [
+        "No bypassing Coursera auth, enrollment, paywalls or DRM",
+        "No credential storage or username/password login",
+        "No cloud, hosting, multi-user or remote access",
+        "No paid APIs, CDNs, analytics or telemetry",
+        "No front-end framework or build step, no Celery/Redis/queues, no ORM",
+        "No Electron/Tauri/Qt, scheduling, notifications, themes, pause",
+        "No Chrome support in v1; only Windows is verified"
+      ]
+    }
+  }
+}
