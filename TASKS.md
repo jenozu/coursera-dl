@@ -3,7 +3,7 @@
 Generated from `.taskmaster/tasks/tasks.json` (the source of truth). Never edit by hand; regenerate with
 `python .taskmaster/render_tasks_md.py`.
 
-**Progress: 5/39 tasks done.**
+**Progress: 6/39 tasks done.**
 
 ## Phase 0 - Prep
 
@@ -25,7 +25,7 @@ Generated from `.taskmaster/tasks/tasks.json` (the source of truth). Never edit 
 - [x] **5. Validate course slugs and constrain output paths (roadmap 1.6, M-6)** _(after 1)_\
   validate_slug() (^[a-z0-9][a-z0-9-]{0,127}$) plus resolved-path containment, called from download_course().\
   _Test:_ .venv/Scripts/python.exe -m pytest -q tests/unit/test_security.py
-- [ ] **6. Phase 1 gate: ruff and pytest pass** _(after 2, 3, 4, 5)_\
+- [x] **6. Phase 1 gate: ruff and pytest pass** _(after 2, 3, 4, 5)_\
   Free script gate before the phase PR.\
   _Test:_ python .taskmaster/run_checks.py run --only <id>
 

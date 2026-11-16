@@ -79,7 +79,7 @@
       {
         "title": "Phase 1 gate: ruff and pytest pass",
         "description": "Free script gate before the phase PR.",
-        "status": "pending",
+        "status": "done",
         "priority": "medium",
         "dependencies": [
           2,
@@ -87,7 +87,7 @@
           4,
           5
         ],
-        "details": "",
+        "details": "[2026-11-16T15:21:42-05:00] script check FAILED: `.venv/Scripts/python.exe -m pytest -q` exit 1 (expected 0); details in .claude/tmp/checks/6.log\n\n[2026-11-16T15:22:24-05:00] script check passed: 2 command(s), 9.4s, no model used",
         "testStrategy": "python .taskmaster/run_checks.py run --only <id>",
         "complexity": 3,
         "runner": "script",
@@ -839,7 +839,7 @@
         }
       ],
       "created": "2026-11-16",
-      "updated": "2026-11-16T15:21:34-05:00",
+      "updated": "2026-11-16T15:22:24-05:00",
       "goal": "Reliable local download manager (FastAPI + plain HTML/JS, Windows, 127.0.0.1 only) for Coursera material the user's own account is enrolled in.",
       "non_goals": [
         "No bypassing Coursera auth, enrollment, paywalls or DRM",
