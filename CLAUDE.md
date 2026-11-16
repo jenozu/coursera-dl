@@ -56,4 +56,4 @@ Commands are bash: on Windows, Git Bash.
 Core: `/run-phase [n|ids]` · `/status` · `/manual-checks run|results` · `/adapt` · `/plan-from-prd add-phase` ·
 `deliver` · `dev-servers` · `next-task`. Project: `security-review`.
 
-<!-- master-harness v2.2.0 -->
+<!-- master-harness v2.2.1 -->
