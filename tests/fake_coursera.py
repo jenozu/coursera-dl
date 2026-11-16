@@ -35,6 +35,8 @@ class _Handler(BaseHTTPRequestHandler):
                 self._send(401, b'{"errorCode": "Not Authorized"}')
                 return
             self._send(200, (FIXTURES / "memberships.json").read_bytes())
+        elif self.path.startswith("/status/"):
+            self._send(int(self.path.rsplit("/", 1)[1]), b"{}")
         elif self.path.startswith("/files/"):
             target = (FIXTURES / "files" / Path(self.path).name).resolve()
             if target.is_file() and (FIXTURES / "files").resolve() in target.parents:

@@ -17,12 +17,12 @@
       {
         "title": "Own the download step in downloader.py (roadmap 1.1, C-1, H-1)",
         "description": "Stop calling dl_coursera_run.download(); our downloader returns per-item results done/skipped/failed and ignores the engine failed-list file.",
-        "status": "pending",
+        "status": "done",
         "priority": "high",
         "dependencies": [
           1
         ],
-        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: coursera_app/downloader.py, download_engine.py (legacy app must keep working), tests/unit/test_downloader.py, tests/test_download_engine.py. Do not read or write download.dl_tasks_failed.json.",
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: coursera_app/downloader.py, download_engine.py (legacy app must keep working), tests/unit/test_downloader.py, tests/test_download_engine.py. Do not read or write download.dl_tasks_failed.json.\n\n[2026-11-16T11:03:21-05:00] built: downloader.download_one (no Range resume), download_engine owns loop, app.py summary; tests pass\n\n[2026-11-16T11:04:54-05:00] opus fixes: restored 4 skipped placeholder tests (roadmap 4.1/4.3) in tests/unit/test_downloader.py; downloader skips length check when Content-Encoding set (iter_content decodes gzip); download_engine catches ValueError from os.path.commonpath (different drives) and records path_outside_output. pytest task files 9 passed 4 skipped; full suite 21 passed 43 skipped; ruff clean.\n\n[2026-11-16T11:06:41-05:00] done by opus, escalated from sonnet; verified",
         "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_downloader.py tests/test_download_engine.py",
         "complexity": 6,
         "review": true,
@@ -839,7 +839,7 @@
         }
       ],
       "created": "2026-11-16",
-      "updated": "2026-11-16T07:27:11-05:00",
+      "updated": "2026-11-16T11:06:41-05:00",
       "goal": "Reliable local download manager (FastAPI + plain HTML/JS, Windows, 127.0.0.1 only) for Coursera material the user's own account is enrolled in.",
       "non_goals": [
         "No bypassing Coursera auth, enrollment, paywalls or DRM",

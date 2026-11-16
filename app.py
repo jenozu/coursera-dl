@@ -192,13 +192,20 @@ if st.button("Download", disabled=not selected_types):
 
         status.write(
             f"Found {result['total_tasks']} downloadable resources; "
-            f"processed {result['download_tasks']} matching your selections."
+            f"{result['selected_tasks']} matched your selections."
         )
-        status.update(label="Download finished", state="complete", expanded=True)
-
-        st.success(
-            f"Finished. Files are under: {result['output_dir']}"
+        summary = (
+            f"Downloaded {result['succeeded']}, skipped {result['skipped']}, "
+            f"failed {result['failed']}. Files are under: {result['output_dir']}"
         )
+        if result["failed"]:
+            status.update(label="Download finished with errors", state="error", expanded=True)
+            st.warning(summary)
+            for f in result["failures"]:
+                st.write(f"- {f['file']}: {f['reason']}")
+        else:
+            status.update(label="Download finished", state="complete", expanded=True)
+            st.success(summary)
     except DownloadEngineError as exc:
         status.update(label="Download failed", state="error", expanded=True)
         st.error(
