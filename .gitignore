@@ -38,3 +38,9 @@ Thumbs.db
 
 # Streamlit cache
 .streamlit/
+
+# master-harness
+.claude/settings.local.json
+.claude/deploy-target
+.harness-backup/
+.harness-tmp/
