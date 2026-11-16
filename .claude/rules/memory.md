@@ -19,8 +19,8 @@ Never update it per task.
 ---
 
 ## Now (overwrite each time, max 6 lines)
-- Plan created 2026-11-16; no phase run yet.
-- Next: phase 0. Run `/run-phase 0`.
+- Phase 1 complete 2026-11-16 on branch phase-1 (tasks 2-6); PR via deliver.
+- Next: phase 2 (Backend core). Run `/run-phase 2`.
 - In progress: none.
 - Manual checks waiting: none.
 
@@ -36,14 +36,16 @@ Never update it per task.
   haiku → sonnet → opus. Manual checks batched per phase.
 
 ## Learned / gotchas (max 15 lines, newest first)
-- (none yet)
+- pytest default tmp (AppData\Temp\pytest-of-andel) is access-denied here; pytest.ini now sets --basetemp=.pytest_tmp.
+- scripts/run.ps1 starts legacy Streamlit until M5; coursera_app/download_engine.py is ruff-excluded (legacy).
+- app.py:209 doesn't catch InvalidSlug (parking-lot).
 
 ## Model routing record (update counts at each close-out)
 | Tier | Done first try | Escalated up | Notes |
 |---|---|---|---|
-| haiku | 0 | 0 | |
-| sonnet | 0 | 0 | |
-| opus | 0 | 0 | |
+| haiku | 3 | 1 | |
+| sonnet | 0 | 1 | |
+| opus | 1 | 0 | |
 <!-- If one tier escalates on 3 tasks in a row, the phase-runner escalates to the lead, who may raise that tier's
      starting complexity in .claude/skills/next-task/SKILL.md. If haiku passes everything, give it complexity 4 too. -->
 

@@ -45,7 +45,7 @@ Commands are bash: on Windows, Git Bash.
 ## Phases (phase n = milestone Mn)
 0 Prep (done) · 1 Critical fixes · 2 Backend core · 3 Download engine · 4 Auth hardening · 5 API · 6 Web UI ·
 7 Cutover and docs · 8 Live verification (needs the user). See `tasks.py phase`.
-- [x] M0 · [ ] M1 · [ ] M2 · [ ] M3 · [ ] M4 · [ ] M5 · [ ] M6 · [ ] M7 · [ ] M8
+- [x] M0 · [x] M1 · [ ] M2 · [ ] M3 · [ ] M4 · [ ] M5 · [ ] M6 · [ ] M7 · [ ] M8
 
 ## Risky paths (reviewer required)
 `coursera_app/security.py`, `main.py` (middleware) · `browser_auth.py` and anything touching cookies/CAUTH/signed URLs ·
