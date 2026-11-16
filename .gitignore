@@ -36,8 +36,9 @@ session.json
 .DS_Store
 Thumbs.db
 
-# Streamlit cache
-.streamlit/
+# Streamlit cache (config.toml is committed)
+.streamlit/*
+!.streamlit/config.toml
 
 # master-harness
 .claude/settings.local.json

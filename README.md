@@ -46,8 +46,10 @@ Optional: `Copy-Item .env.example .env` and set `COURSERA_DOWNLOAD_DIR` (default
 Sign in to `coursera.org` in Firefox, Edge or Brave first, then:
 
 ```powershell
-streamlit run app.py --server.address 127.0.0.1
+streamlit run app.py
 ```
+
+Run it from the repo root: `.streamlit/config.toml` sets `address = "127.0.0.1"` and turns off usage statistics, so the log shows only `http://127.0.0.1:8501` and no Network URL.
 
 Open the URL Streamlit prints (normally `http://localhost:8501`), choose your browser in the sidebar and click **Connect from Browser**. Edge and Brave may need PowerShell run as Administrator.
 

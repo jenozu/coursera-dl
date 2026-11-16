@@ -48,12 +48,12 @@
       {
         "title": "Bind Streamlit to localhost, disable usage stats (roadmap 1.3, H-2)",
         "description": "Commit .streamlit/config.toml (address 127.0.0.1, gatherUsageStats=false), make scripts/run.ps1 use it, document it.",
-        "status": "pending",
+        "status": "done",
         "priority": "high",
         "dependencies": [
           1
         ],
-        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Remove .streamlit/ from .gitignore for config.toml only.",
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Remove .streamlit/ from .gitignore for config.toml only.\n\n[2026-11-16T12:43:09-05:00] plan (haiku): .streamlit/config.toml (new), .gitignore (.streamlit/* + !config.toml), tests/test_streamlit_config.py (new), README run note - config-file approach, no app code change.\noutcome: config.toml committed-ready; streamlit run app.py from repo root logs only \"URL: http://127.0.0.1:8501\" (no Network URL); curl to LAN IP 10.0.0.115:8501 refused (exit 7). pytest: 14 passed, 9 errors pre-existing (Windows pytest tmp_path PermissionError, same on baseline).\ndiscrepancy: scripts/run.ps1 runs run.py, a stub that exits 1 and does not start Streamlit. Left run.ps1 unchanged (it is the M5 launcher). Config is picked up automatically from repo root, so run.ps1 needs no change until it starts Streamlit.\n\n[2026-11-16T12:43:09-05:00] testStrategy: streamlit run from repo root = no Network URL (verified); pytest -q tests = 14 passed, 9 pre-existing tmp_path errors\n\n[2026-11-16T15:16:45-05:00] done by sonnet, escalated from haiku; verified",
         "testStrategy": "Start app as scripts/run.ps1 does and confirm the log shows no Network URL; .venv/Scripts/python.exe -m pytest -q tests",
         "complexity": 2,
         "phase": 1,
@@ -839,7 +839,7 @@
         }
       ],
       "created": "2026-11-16",
-      "updated": "2026-11-16T11:06:41-05:00",
+      "updated": "2026-11-16T15:16:45-05:00",
       "goal": "Reliable local download manager (FastAPI + plain HTML/JS, Windows, 127.0.0.1 only) for Coursera material the user's own account is enrolled in.",
       "non_goals": [
         "No bypassing Coursera auth, enrollment, paywalls or DRM",

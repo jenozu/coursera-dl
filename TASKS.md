@@ -3,7 +3,7 @@
 Generated from `.taskmaster/tasks/tasks.json` (the source of truth). Never edit by hand; regenerate with
 `python .taskmaster/render_tasks_md.py`.
 
-**Progress: 2/39 tasks done.**
+**Progress: 3/39 tasks done.**
 
 ## Phase 0 - Prep
 
@@ -19,7 +19,7 @@ Generated from `.taskmaster/tasks/tasks.json` (the source of truth). Never edit 
 - [ ] **3. Report download outcomes in the Streamlit UI (roadmap 1.2)** _(after 2)_\
   Replace 'Finished' with 'Downloaded X, skipped Y, failed Z' and list failed files with reasons; rename download_tasks to selected_tasks.\
   _Test:_ .venv/Scripts/python.exe -m pytest -q tests
-- [ ] **4. Bind Streamlit to localhost, disable usage stats (roadmap 1.3, H-2)** _(after 1)_\
+- [x] **4. Bind Streamlit to localhost, disable usage stats (roadmap 1.3, H-2)** _(after 1)_\
   Commit .streamlit/config.toml (address 127.0.0.1, gatherUsageStats=false), make scripts/run.ps1 use it, document it.\
   _Test:_ Start app as scripts/run.ps1 does and confirm the log shows no Network URL; .venv/Scripts/python.exe -m pytest -q tests
 - [ ] **5. Validate course slugs and constrain output paths (roadmap 1.6, M-6)** _(after 1)_\
