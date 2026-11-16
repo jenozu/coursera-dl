@@ -13,6 +13,7 @@ import threading
 from dl_coursera_run import crawl, gather_dl_tasks
 
 from coursera_app.downloader import ItemResult, download_one
+from coursera_app.security import safe_course_dir
 
 
 class DownloadEngineError(RuntimeError):
@@ -143,6 +144,8 @@ def download_course(
 ) -> dict:
     """Crawl and download one enrolled Coursera course."""
 
+    # Validate the slug and containment before anything touches the disk (audit M-6).
+    course_dir = safe_course_dir(output_dir, course_slug)
     cookie_file = _write_cookie_file(cookies)
 
     try:
@@ -150,7 +153,7 @@ def download_course(
 
         # dl_coursera writes crawl metadata to <outdir>/<slug>/.cache/crawl.pkl
         # but the packaged API does not always create that cache directory first.
-        cache_dir = os.path.join(output_dir, course_slug, ".cache")
+        cache_dir = os.path.join(course_dir, ".cache")
         os.makedirs(cache_dir, exist_ok=True)
 
         # dl_coursera 1.0.1 on PyPI exposes a 3-argument crawl() function,

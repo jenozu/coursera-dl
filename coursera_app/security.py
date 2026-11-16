@@ -2,17 +2,34 @@
 
 from __future__ import annotations
 
+import os
+import re
 from pathlib import Path
+
+from coursera_app.errors import InvalidSlug
+
+_SLUG_RE = re.compile(r"[a-z0-9][a-z0-9-]{0,127}")
 
 
 def validate_slug(slug: str) -> str:
     """Return the slug if it matches ``^[a-z0-9][a-z0-9-]{0,127}$``, else raise InvalidSlug."""
-    raise NotImplementedError("roadmap 1.6")
+    if not isinstance(slug, str) or not _SLUG_RE.fullmatch(slug):
+        raise InvalidSlug(f"Invalid course slug: {slug!r}")
+    return slug
 
 
 def safe_course_dir(download_root: str | Path, slug: str) -> Path:
     """Return the resolved course directory, guaranteed to be inside ``download_root``."""
-    raise NotImplementedError("roadmap 1.6")
+    validate_slug(slug)
+    root = os.path.realpath(download_root)
+    target = os.path.realpath(os.path.join(root, slug))
+    try:
+        inside = os.path.commonpath([root, target]) == root
+    except ValueError:  # different drives on Windows
+        inside = False
+    if not inside:
+        raise InvalidSlug(f"Course directory escapes the download root: {slug!r}")
+    return Path(target)
 
 
 def sanitize_segment(name: str, max_len: int = 80) -> str:

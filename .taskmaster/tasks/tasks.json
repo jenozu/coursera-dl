@@ -38,7 +38,7 @@
         "dependencies": [
           2
         ],
-        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: app.py, download_engine.py.\n\n[2026-11-16T15:18:05-05:00] plan (haiku): coursera_app/download_engine.py, tests/test_download_engine.py - task 2 already built the app.py X/Y/Z summary and failure list; remaining: drop duplicate download_tasks key, assert failure file/reason and selected_tasks in test.\nbuilt: removed \"download_tasks\" from download_course() result (app.py reads selected_tasks only); extended test_http_500_reported_failed_in_summary with file name, selected_tasks, and no download_tasks key.\ntests: task files 9 passed 4 skipped with --basetemp outside pytest-of-andel; default tmp_path gives 9 PermissionError (pre-existing, WinError 5 on pytest-of-andel). ruff I001 in app.py is pre-existing on baseline.\n\n[2026-11-16T15:18:05-05:00] app.py UI gaps: none left; zero-failure path shows st.success, failure path st.warning naming files (verified by reading, no AppTest run)\n\n[2026-11-16T15:19:12-05:00] done by haiku; verified",
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: app.py, download_engine.py.\n\n[2026-11-16T15:18:05-05:00] plan (haiku): coursera_app/download_engine.py, tests/test_download_engine.py - task 2 already built the app.py X/Y/Z summary and failure list; remaining: drop duplicate download_tasks key, assert failure file/reason and selected_tasks in test.\nbuilt: removed \"download_tasks\" from download_course() result (app.py reads selected_tasks only); extended test_http_500_reported_failed_in_summary with file name, selected_tasks, and no download_tasks key.\ntests: task files 9 passed 4 skipped with --basetemp outside pytest-of-andel; default tmp_path gives 9 PermissionError (pre-existing, WinError 5 on pytest-of-andel). ruff I001 in app.py is pre-existing on baseline.\n\n[2026-11-16T15:18:05-05:00] app.py UI gaps: none left; zero-failure path shows st.success, failure path st.warning naming files (verified by reading, no AppTest run)\n\n[2026-11-16T15:19:12-05:00] done by haiku; verified\n\n[2026-11-16T15:19:16-05:00] note: UI outcome lines verified by reading app.py only, no AppTest; add to manual-checks if wanted",
         "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests",
         "complexity": 3,
         "phase": 1,
@@ -63,12 +63,12 @@
       {
         "title": "Validate course slugs and constrain output paths (roadmap 1.6, M-6)",
         "description": "validate_slug() (^[a-z0-9][a-z0-9-]{0,127}$) plus resolved-path containment, called from download_course().",
-        "status": "pending",
+        "status": "done",
         "priority": "medium",
         "dependencies": [
           1
         ],
-        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: download_engine.py, coursera_app/security.py, tests/unit/test_security.py.",
+        "details": "Roadmap in docs/audit/IMPROVEMENT_ROADMAP.md (grep the id). Un-skip the matching tests in tests/ first. Files: download_engine.py, coursera_app/security.py, tests/unit/test_security.py.\n\n[2026-11-16T15:20:20-05:00] plan (haiku): coursera_app/security.py (validate_slug, safe_course_dir), coursera_app/download_engine.py (call safe_course_dir before cookie write), tests/unit/test_security.py (un-skip 1.6 tests, keep 4.2/5.1 skipped) - regex fullmatch, realpath containment, InvalidSlug from errors.py\n\n[2026-11-16T15:20:24-05:00] done (haiku): validate_slug uses re.fullmatch on [a-z0-9][a-z0-9-]{0,127} and raises InvalidSlug; safe_course_dir validates then checks realpath containment with commonpath. download_course() calls safe_course_dir before writing the cookie file (so errors are not wrapped in DownloadEngineError) and uses its result for .cache. Un-skipped traversal, accept, containment tests; 4.2 and 5.1 tests stay skipped. Tests: tests/unit/test_security.py 15 passed 2 skipped; tests/test_download_engine.py 5 passed. Ruff: only pre-existing I001/UP035 in download_engine.py import block (not touched).\n\n[2026-11-16T15:20:25-05:00] note: an earlier malformed log heredoc may have written an empty note on task 5; ignore it.\n\n[2026-11-16T15:21:34-05:00] done by haiku; verified",
         "testStrategy": ".venv/Scripts/python.exe -m pytest -q tests/unit/test_security.py",
         "complexity": 3,
         "review": true,
@@ -839,7 +839,7 @@
         }
       ],
       "created": "2026-11-16",
-      "updated": "2026-11-16T15:19:12-05:00",
+      "updated": "2026-11-16T15:21:34-05:00",
       "goal": "Reliable local download manager (FastAPI + plain HTML/JS, Windows, 127.0.0.1 only) for Coursera material the user's own account is enrolled in.",
       "non_goals": [
         "No bypassing Coursera auth, enrollment, paywalls or DRM",

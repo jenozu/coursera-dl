@@ -3,7 +3,7 @@
 Generated from `.taskmaster/tasks/tasks.json` (the source of truth). Never edit by hand; regenerate with
 `python .taskmaster/render_tasks_md.py`.
 
-**Progress: 4/39 tasks done.**
+**Progress: 5/39 tasks done.**
 
 ## Phase 0 - Prep
 
@@ -22,7 +22,7 @@ Generated from `.taskmaster/tasks/tasks.json` (the source of truth). Never edit 
 - [x] **4. Bind Streamlit to localhost, disable usage stats (roadmap 1.3, H-2)** _(after 1)_\
   Commit .streamlit/config.toml (address 127.0.0.1, gatherUsageStats=false), make scripts/run.ps1 use it, document it.\
   _Test:_ Start app as scripts/run.ps1 does and confirm the log shows no Network URL; .venv/Scripts/python.exe -m pytest -q tests
-- [ ] **5. Validate course slugs and constrain output paths (roadmap 1.6, M-6)** _(after 1)_\
+- [x] **5. Validate course slugs and constrain output paths (roadmap 1.6, M-6)** _(after 1)_\
   validate_slug() (^[a-z0-9][a-z0-9-]{0,127}$) plus resolved-path containment, called from download_course().\
   _Test:_ .venv/Scripts/python.exe -m pytest -q tests/unit/test_security.py
 - [ ] **6. Phase 1 gate: ruff and pytest pass** _(after 2, 3, 4, 5)_\
