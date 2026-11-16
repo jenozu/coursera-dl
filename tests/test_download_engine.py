@@ -137,3 +137,6 @@ def test_http_500_reported_failed_in_summary(monkeypatch, tmp_path):
         srv.stop()
     assert r["failed"] == 1 and r["succeeded"] == 0
     assert r["failures"][0]["reason"] == "http_500"
+    assert r["failures"][0]["file"] == "x.mp4"
+    assert r["selected_tasks"] == 1
+    assert "download_tasks" not in r

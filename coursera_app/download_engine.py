@@ -193,7 +193,6 @@ def download_course(
             "course_slug": course_slug,
             "total_tasks": len(tasks),
             "selected_tasks": len(filtered_tasks),
-            "download_tasks": len(filtered_tasks),
             "succeeded": count("done"),
             "skipped": count("skipped"),
             "failed": count("failed"),

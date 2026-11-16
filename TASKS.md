@@ -3,7 +3,7 @@
 Generated from `.taskmaster/tasks/tasks.json` (the source of truth). Never edit by hand; regenerate with
 `python .taskmaster/render_tasks_md.py`.
 
-**Progress: 3/39 tasks done.**
+**Progress: 4/39 tasks done.**
 
 ## Phase 0 - Prep
 
@@ -16,7 +16,7 @@ Generated from `.taskmaster/tasks/tasks.json` (the source of truth). Never edit 
 - [x] **2. Own the download step in downloader.py (roadmap 1.1, C-1, H-1)** _(after 1)_\
   Stop calling dl_coursera_run.download(); our downloader returns per-item results done/skipped/failed and ignores the engine failed-list file.\
   _Test:_ .venv/Scripts/python.exe -m pytest -q tests/unit/test_downloader.py tests/test_download_engine.py
-- [ ] **3. Report download outcomes in the Streamlit UI (roadmap 1.2)** _(after 2)_\
+- [x] **3. Report download outcomes in the Streamlit UI (roadmap 1.2)** _(after 2)_\
   Replace 'Finished' with 'Downloaded X, skipped Y, failed Z' and list failed files with reasons; rename download_tasks to selected_tasks.\
   _Test:_ .venv/Scripts/python.exe -m pytest -q tests
 - [x] **4. Bind Streamlit to localhost, disable usage stats (roadmap 1.3, H-2)** _(after 1)_\
