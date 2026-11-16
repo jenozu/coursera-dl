@@ -1,21 +1,28 @@
 import streamlit as st
 
-from coursera_app.auth import (
-    CourseraAuthenticationError,
-    connect_with_cauth,
-    list_courses,
-)
-from coursera_app.browser_auth import (
-    BrowserCookieError,
-    SUPPORTED_BROWSERS,
-    read_coursera_cookies_from_browser,
-)
-from coursera_app.config import load_config
-from coursera_app.download_engine import (
-    DownloadEngineError,
-    cookies_from_cauth,
-    download_course,
-)
+try:
+    from coursera_app.auth import (
+        CourseraAuthenticationError,
+        connect_with_cauth,
+        list_courses,
+    )
+    from coursera_app.browser_auth import (
+        BrowserCookieError,
+        SUPPORTED_BROWSERS,
+        read_coursera_cookies_from_browser,
+    )
+    from coursera_app.config import load_config
+    from coursera_app.download_engine import (
+        DownloadEngineError,
+        cookies_from_cauth,
+        download_course,
+    )
+except ImportError as exc:  # startup self-check (roadmap 1.4)
+    st.error(
+        f"Missing dependency: {exc}. Use Python 3.11 and run "
+        "`.\\scripts\\setup.ps1`, which installs the legacy `coursera-dl` package."
+    )
+    st.stop()
 
 
 config = load_config()

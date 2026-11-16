@@ -1,0 +1,15 @@
+{
+  "_about": "Allowlist for run_checks.py (free checks, no model). A command runs only if it starts with one of these entries: a program name (\"pytest\") or a program plus its first arguments (\"npm run\"). Keep it to commands that only check things. Edit for this project's stack; remove what it doesn't use.",
+  "allow": [
+    "python",
+    ".venv/Scripts/python.exe",
+    "pytest",
+    "ruff",
+    "git status",
+    "git diff",
+    "gh run view"
+  ],
+  "timeout_seconds": 900,
+  "retries_on_timeout": 1,
+  "tail_lines": 20
+}

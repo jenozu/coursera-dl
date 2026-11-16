@@ -18,4 +18,4 @@ $python = if (Test-Path ".\.venv\Scripts\python.exe") {
 Write-Host ""
 Write-Host "Setup complete."
 Write-Host "Test: $python -m pytest"
-Write-Host "Run:  $python -m streamlit run app.py"
+Write-Host "Run:  $python -m streamlit run app.py --server.address 127.0.0.1"
